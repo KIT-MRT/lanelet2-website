@@ -2,7 +2,7 @@
 
 Public hub for the [Lanelet2](https://github.com/fzi-forschungszentrum-informatik/Lanelet2) HD-map library: official resources, addons, datasets, research, Autoware tooling, and community work.
 
-This is a **barebones** first version. Most catalog entries are labeled placeholders so we can iterate on structure and design before filling content.
+Catalog copy is preliminary: teasers, papers, and project links pulled from the Lanelet2 ecosystem. Two community slots stay as placeholders for incoming listings.
 
 ## Stack
 
@@ -33,7 +33,9 @@ Edit [`src/data/entries.ts`](src/data/entries.ts). Each object is one teaser:
 | `category` | One of the ids in [`src/data/categories.ts`](src/data/categories.ts) |
 | `title`, `teaser` | Card copy |
 | `media` | `{ type: 'image' \| 'video', src: 'images/…' }` — files live in `public/` |
-| `href` + `external: true` | Card links out |
+| `href` + `external: true` | Primary outbound URL (wraps the card if there are no extra `links`) |
+| `links` | Extra pills: paper, GitHub, project page, … |
+| `copyright` | Figure/video credit shown on the media |
 | `page: true` | Card links to an internal page; optional `detail` paragraphs and `repo` |
 | `placeholder: true` | Dashed stub (not a finished listing) |
 

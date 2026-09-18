@@ -1,6 +1,6 @@
 ---
 import type { TeaserEntry } from '../data/entries';
-import { entryHref } from '../data/entries';
+import { cardIsWrapped, entryHref, entryLinks, teaserHtml } from '../data/entries';
 import { assetUrl } from '../utils/paths';
 
 interface Props {
@@ -13,10 +13,13 @@ const href = entryHref(entry);
 const media = entry.media;
 const imageSrc = media?.type === 'image' && media.src ? assetUrl(media.src) : undefined;
 const videoSrc = media?.type === 'video' && media.src ? assetUrl(media.src) : undefined;
+const posterSrc = media?.poster ? assetUrl(media.poster) : undefined;
 const cta = entry.cta ?? (entry.external ? 'Open site' : 'Learn more');
-const Tag = href ? 'a' : 'div';
+const wrapCard = cardIsWrapped(entry);
+const Tag = wrapCard ? 'a' : 'article';
 const featured = entry.featured === true;
-const linkProps = href
+const pills = wrapCard ? [] : entryLinks(entry);
+const linkProps = wrapCard && href
   ? {
       href,
       ...(entry.external ? { target: '_blank', rel: 'noopener noreferrer' } : {}),
@@ -32,12 +35,12 @@ const linkProps = href
     entry.placeholder
       ? 'border-dashed border-kit/35 bg-white hover:border-kit/60'
       : 'border-kit/15 bg-kit-50 hover:border-kit/40 hover:shadow-xl hover:shadow-kit/10',
-    href ? 'cursor-pointer' : 'cursor-default',
+    wrapCard ? 'cursor-pointer' : 'cursor-default',
   ]}
 >
   {imageSrc && (
     <div class:list={[
-      'overflow-hidden bg-navy/5 shrink-0',
+      'relative overflow-hidden bg-navy/5 shrink-0',
       featured ? 'aspect-[16/9] md:aspect-auto md:w-3/5 md:min-h-[280px]' : 'aspect-[16/9]',
     ]}>
       <img
@@ -45,22 +48,33 @@ const linkProps = href
         alt={media?.alt ?? ''}
         class="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]"
       />
+      {entry.copyright && (
+        <p class="absolute bottom-0 inset-x-0 px-3 py-1.5 text-[10px] leading-snug text-white/85 bg-navy/70">
+          {entry.copyright}
+        </p>
+      )}
     </div>
   )}
   {videoSrc && (
     <div class:list={[
-      'overflow-hidden bg-navy shrink-0',
+      'relative overflow-hidden bg-navy shrink-0',
       featured ? 'aspect-[16/9] md:aspect-auto md:w-3/5 md:min-h-[280px]' : 'aspect-[16/9]',
     ]}>
       <video
-        src={videoSrc}
         muted
         loop
         playsinline
         preload="none"
         data-play-inview
+        data-src={videoSrc}
+        poster={posterSrc}
         class="h-full w-full object-cover pointer-events-none"
       />
+      {entry.copyright && (
+        <p class="absolute bottom-0 inset-x-0 px-3 py-1.5 text-[10px] leading-snug text-white/85 bg-navy/70">
+          {entry.copyright}
+        </p>
+      )}
     </div>
   )}
 
@@ -69,14 +83,14 @@ const linkProps = href
     compact && !featured ? 'p-5' : 'p-6',
     featured ? 'md:p-10' : '',
   ]}>
-    {(entry.placeholder || (entry.external && href)) && (
+    {(entry.placeholder || (entry.external && wrapCard)) && (
       <div class="flex items-center gap-2 mb-2">
         {entry.placeholder && (
           <span class="text-[10px] font-bold uppercase tracking-widest bg-kit/10 text-kit px-2 py-0.5 rounded-full">
             Placeholder
           </span>
         )}
-        {entry.external && href && (
+        {entry.external && wrapCard && (
           <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400">
             External
           </span>
@@ -85,23 +99,44 @@ const linkProps = href
     )}
 
     <h3 class:list={[
-      'font-display font-extrabold text-navy group-hover:text-kit transition-colors',
+      'font-display font-extrabold text-navy transition-colors',
+      wrapCard ? 'group-hover:text-kit' : '',
       featured ? 'text-2xl md:text-3xl mb-3' : compact ? 'text-lg mb-1.5' : 'text-xl mb-2',
     ]}>
       {entry.title}
     </h3>
-    <p class:list={[
-      'text-gray-500 leading-relaxed flex-1',
-      featured ? 'text-base' : 'text-sm',
-    ]}>
-      {entry.teaser}
-    </p>
+    <p
+      class:list={[
+        'text-gray-500 leading-relaxed flex-1',
+        featured ? 'text-base' : 'text-sm',
+      ]}
+      set:html={teaserHtml(entry.teaser)}
+    />
 
-    {href && (
+    {!imageSrc && !videoSrc && entry.copyright && (
+      <p class="text-[10px] text-gray-400 mt-3">{entry.copyright}</p>
+    )}
+
+    {wrapCard && href && (
       <span class="inline-flex items-center gap-1 text-kit text-sm font-bold mt-4 group-hover:gap-2 transition-all">
         {cta}
         {entry.external ? ' ↗' : ' →'}
       </span>
+    )}
+
+    {pills.length > 0 && (
+      <div class="flex flex-wrap gap-2 mt-4">
+        {pills.map((link) => (
+          <a
+            href={link.href}
+            target={link.external ? '_blank' : undefined}
+            rel={link.external ? 'noopener noreferrer' : undefined}
+            class="inline-flex items-center text-xs font-bold text-kit border border-kit/25 rounded-full px-3 py-1 hover:bg-kit/10 transition-colors"
+          >
+            {link.label}{link.external ? ' ↗' : ' →'}
+          </a>
+        ))}
+      </div>
     )}
   </div>
 </Tag>

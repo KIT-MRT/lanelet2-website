@@ -42,14 +42,30 @@ const favicon = withBase('favicon.svg');
           return;
         }
 
+        const lazySrc = (video: HTMLVideoElement) => video.dataset.src;
+
+        const attachSrc = (video: HTMLVideoElement) => {
+          const src = lazySrc(video);
+          if (src && video.getAttribute('src') !== src) video.src = src;
+        };
+
+        const detachSrc = (video: HTMLVideoElement) => {
+          if (!lazySrc(video)) return;
+          video.pause();
+          video.removeAttribute('src');
+          video.load();
+        };
+
         const io = new IntersectionObserver(
           (entries) => {
             for (const entry of entries) {
               const video = entry.target as HTMLVideoElement;
               if (entry.isIntersecting) {
+                attachSrc(video);
                 video.play().catch(() => {});
               } else {
                 video.pause();
+                detachSrc(video);
               }
             }
           },

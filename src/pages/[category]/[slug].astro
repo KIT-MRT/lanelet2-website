@@ -3,7 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import { getCategory } from '../../data/categories';
-import { pagedEntries, type TeaserEntry } from '../../data/entries';
+import { pagedEntries, teaserHtml, teaserPlain, type TeaserEntry } from '../../data/entries';
 import { site } from '../../data/site';
 import { withBase, assetUrl } from '../../utils/paths';
 
@@ -23,9 +23,10 @@ const category = getCategory(entry.category);
 const imageSrc =
   entry.media?.type === 'image' && entry.media.src ? assetUrl(entry.media.src) : undefined;
 const repo = entry.repo ?? (entry.external ? entry.href : undefined);
+const extraLinks = (entry.links ?? []).filter((link) => link.href !== repo);
 ---
 
-<Layout title={`${entry.title} – ${site.name}`} description={entry.teaser}>
+<Layout title={`${entry.title} – ${site.name}`} description={teaserPlain(entry.teaser)}>
   <Nav />
 
   <section class="bg-navy hero-dots pt-32 pb-16 px-6">
@@ -38,7 +39,7 @@ const repo = entry.repo ?? (entry.external ? entry.href : undefined);
       <h1 class="font-display font-extrabold text-4xl md:text-5xl text-white mt-6 mb-4">
         {entry.title}
       </h1>
-      <p class="text-slate-300 max-w-2xl leading-relaxed">{entry.teaser}</p>
+      <p class="text-slate-300 max-w-2xl leading-relaxed" set:html={teaserHtml(entry.teaser)} />
     </div>
   </section>
 
@@ -47,6 +48,9 @@ const repo = entry.repo ?? (entry.external ? entry.href : undefined);
       {imageSrc && (
         <figure class="mb-10 rounded-2xl overflow-hidden border border-kit/15">
           <img src={imageSrc} alt={entry.media?.alt ?? ''} class="w-full h-auto" />
+          {entry.copyright && (
+            <figcaption class="px-4 py-2 text-xs text-gray-500 bg-kit-50">{entry.copyright}</figcaption>
+          )}
         </figure>
       )}
 
@@ -54,17 +58,29 @@ const repo = entry.repo ?? (entry.external ? entry.href : undefined);
         <p class="text-gray-600 leading-relaxed mb-5">{paragraph}</p>
       ))}
 
-      {repo && (
-        <a
-          href={repo}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 bg-kit hover:bg-kit-600 text-white font-bold px-6 py-3 rounded-xl mt-4 transition-colors"
-        >
-          <i class="ti ti-brand-github" aria-hidden="true"></i>
-          View on GitHub
-        </a>
-      )}
+      <div class="flex flex-wrap gap-3 mt-4">
+        {repo && (
+          <a
+            href={repo}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 bg-kit hover:bg-kit-600 text-white font-bold px-6 py-3 rounded-xl transition-colors"
+          >
+            <i class="ti ti-brand-github" aria-hidden="true"></i>
+            View on GitHub
+          </a>
+        )}
+        {extraLinks.map((link) => (
+          <a
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 border border-kit/25 text-kit font-bold px-6 py-3 rounded-xl hover:bg-kit/10 transition-colors"
+          >
+            {link.label} ↗
+          </a>
+        ))}
+      </div>
     </div>
   </section>
 

@@ -21,7 +21,7 @@ export const categories: Category[] = [
   {
     id: 'official',
     title: 'Official',
-    blurb: 'The Lanelet2 library, documentation, and Python package — start here.',
+    blurb: 'The Lanelet2 library, documentation, Python package, and first-party papers — start here.',
     icon: 'ti-book',
   },
   {
