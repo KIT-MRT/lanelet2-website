@@ -124,7 +124,7 @@ export const entries: TeaserEntry[] = [
     category: 'projects',
     title: 'KIT Autonomous Driving Project',
     teaser:
-      'Lanelet2 HD maps in a real-world autonomous driving stack at KIT — onboard Autoware, research vehicles, and closed-course operation. Learn more at the MRT CITI project page.',
+      'Lanelet2 HD maps in a real-world autonomous driving stack at KIT — onboard Autoware, research vehicles, and close-loop operations. Learn more at the MRT CITI project page.',
     media: {
       type: 'video',
       src: 'videos/autoware_kitscenes_crf30-720p.mp4',

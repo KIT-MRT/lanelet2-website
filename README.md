@@ -52,3 +52,15 @@ Intended remote: `https://github.com/KIT-MRT/lanelet2-website`.
 The workflow in [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) builds with `npm ci` and deploys `dist/`.
 
 If the repo name changes, update `base` in [`astro.config.mjs`](astro.config.mjs) to `/<new-name>` (no trailing slash). Every internal link already uses `import.meta.env.BASE_URL`.
+
+## License
+
+The **source code** of this website (Astro, TypeScript, CSS, and markup) is licensed under the [MIT License](LICENSE).
+
+That grant does **not** cover third-party or institutional assets in `public/`, including:
+
+- KIT and FZI wordmarks and logos
+- Any image or video content
+
+Those remain the property of their respective owners. Lanelet2, KIT, and FZI names and logos are not licensed for use in a way that implies another site is the official project hub.
+
