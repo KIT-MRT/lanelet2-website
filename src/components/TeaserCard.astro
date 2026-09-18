@@ -1,0 +1,106 @@
+---
+import type { TeaserEntry } from '../data/entries';
+import { entryHref } from '../data/entries';
+import { assetUrl } from '../lib/paths';
+
+interface Props {
+  entry: TeaserEntry;
+  compact?: boolean;
+}
+
+const { entry, compact = false } = Astro.props;
+const href = entryHref(entry);
+const media = entry.media;
+const imageSrc = media?.type === 'image' && media.src ? assetUrl(media.src) : undefined;
+const videoSrc = media?.type === 'video' && media.src ? assetUrl(media.src) : undefined;
+const cta = entry.cta ?? (entry.external ? 'Open site' : 'Learn more');
+const Tag = href ? 'a' : 'div';
+const featured = entry.featured === true;
+const linkProps = href
+  ? {
+      href,
+      ...(entry.external ? { target: '_blank', rel: 'noopener noreferrer' } : {}),
+    }
+  : {};
+---
+
+<Tag
+  {...linkProps}
+  class:list={[
+    'group flex overflow-hidden rounded-2xl border transition-all h-full',
+    featured ? 'flex-col md:flex-row md:col-span-2 lg:col-span-3' : 'flex-col',
+    entry.placeholder
+      ? 'border-dashed border-kit/35 bg-white hover:border-kit/60'
+      : 'border-kit/15 bg-kit-50 hover:border-kit/40 hover:shadow-xl hover:shadow-kit/10',
+    href ? 'cursor-pointer' : 'cursor-default',
+  ]}
+>
+  {imageSrc && (
+    <div class:list={[
+      'overflow-hidden bg-navy/5 shrink-0',
+      featured ? 'aspect-[16/9] md:aspect-auto md:w-3/5 md:min-h-[280px]' : 'aspect-[16/9]',
+    ]}>
+      <img
+        src={imageSrc}
+        alt={media?.alt ?? ''}
+        class="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]"
+      />
+    </div>
+  )}
+  {videoSrc && (
+    <div class:list={[
+      'overflow-hidden bg-navy shrink-0',
+      featured ? 'aspect-[16/9] md:aspect-auto md:w-3/5 md:min-h-[280px]' : 'aspect-[16/9]',
+    ]}>
+      <video
+        src={videoSrc}
+        muted
+        loop
+        playsinline
+        autoplay
+        class="h-full w-full object-cover pointer-events-none"
+      />
+    </div>
+  )}
+
+  <div class:list={[
+    'flex flex-1 flex-col justify-center',
+    compact && !featured ? 'p-5' : 'p-6',
+    featured ? 'md:p-10' : '',
+  ]}>
+    {(entry.placeholder || (entry.external && href)) && (
+      <div class="flex items-center gap-2 mb-2">
+        {entry.placeholder && (
+          <span class="text-[10px] font-bold uppercase tracking-widest bg-kit/10 text-kit px-2 py-0.5 rounded-full">
+            Placeholder
+          </span>
+        )}
+        {entry.external && href && (
+          <span class="text-[10px] font-bold uppercase tracking-widest text-gray-400">
+            External
+          </span>
+        )}
+      </div>
+    )}
+
+    <h3 class:list={[
+      'font-display font-extrabold text-navy group-hover:text-kit transition-colors',
+      featured ? 'text-2xl md:text-3xl mb-3' : compact ? 'text-lg mb-1.5' : 'text-xl mb-2',
+    ]}>
+      {entry.title}
+    </h3>
+    <p class:list={[
+      'text-gray-500 leading-relaxed flex-1',
+      featured ? 'text-base' : 'text-sm',
+    ]}>
+      {entry.teaser}
+    </p>
+
+    {href && (
+      <span class="inline-flex items-center gap-1 text-kit text-sm font-bold mt-4 group-hover:gap-2 transition-all">
+        {cta}
+        {entry.external ? ' ↗' : ' →'}
+      </span>
+    )}
+  </div>
+</Tag>

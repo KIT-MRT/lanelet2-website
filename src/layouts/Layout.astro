@@ -1,0 +1,94 @@
+---
+import { site } from '../data/site';
+import { withBase } from '../lib/paths';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = site.description } = Astro.props;
+const favicon = withBase('favicon.svg');
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href={favicon} />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="font-body bg-white text-gray-900 antialiased text-[17px] leading-[1.75]">
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --font-xs: 0.75rem;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.25;
+  }
+
+  ::selection {
+    background-color: #009682;
+    color: white;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f0f4f3;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #009682;
+    border-radius: 3px;
+  }
+
+  .hero-dots {
+    background-image: radial-gradient(
+      circle,
+      rgba(0, 150, 130, 0.22) 1px,
+      transparent 1px
+    );
+    background-size: 26px 26px;
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-up {
+    opacity: 0;
+    animation: fadeUp 0.65s ease forwards;
+  }
+  .d1 { animation-delay: 0.08s; }
+  .d2 { animation-delay: 0.20s; }
+  .d3 { animation-delay: 0.34s; }
+  .d4 { animation-delay: 0.48s; }
+  .d5 { animation-delay: 0.60s; }
+  .d6 { animation-delay: 0.72s; }
+</style>

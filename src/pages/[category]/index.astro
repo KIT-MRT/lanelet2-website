@@ -1,0 +1,50 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import TeaserCard from '../../components/TeaserCard.astro';
+import { categories, getCategory } from '../../data/categories';
+import { entriesFor } from '../../data/entries';
+import { site } from '../../data/site';
+import { withBase } from '../../lib/paths';
+export function getStaticPaths() {
+  return categories.map((category) => ({
+    params: { category: category.id },
+  }));
+}
+
+const { category: categoryId } = Astro.params;
+const category = getCategory(categoryId ?? '');
+if (!category) {
+  throw new Error(`Unknown category: ${categoryId}`);
+}
+
+const items = entriesFor(category.id);
+---
+
+<Layout title={`${category.title} – ${site.name}`} description={category.blurb}>
+  <Nav />
+
+  <section class="bg-navy hero-dots pt-32 pb-16 px-6">
+    <div class="max-w-6xl mx-auto">
+      <a href={withBase()} class="text-kit text-sm font-bold hover:underline">← Home</a>
+      <h1 class="font-display font-extrabold text-4xl md:text-5xl text-white mt-6 mb-4 flex items-center gap-3">
+        <i class={`ti ${category.icon} text-kit text-3xl`} aria-hidden="true"></i>
+        {category.title}
+      </h1>
+      <p class="text-slate-300 max-w-2xl leading-relaxed">{category.blurb}</p>
+    </div>
+  </section>
+
+  <section class="py-16 bg-white">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {items.map((entry) => (
+          <TeaserCard entry={entry} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>

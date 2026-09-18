@@ -1,0 +1,95 @@
+---
+import { site } from '../data/site';
+import { categories } from '../data/categories';
+import { withBase } from '../lib/paths';
+
+const home = withBase();
+const ecosystemCategories = categories.filter((c) => c.id !== 'official');
+const kitLogo = withBase('images/KIT_logo.svg');
+const fziLogo = withBase('images/Fzi_logo.svg');
+const mark = withBase('images/lanelet2-mark.svg');
+---
+
+<div class="bg-white border-t border-gray-100 py-10">
+  <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-center gap-10 sm:gap-16">
+    <a href={site.origin.fzi} target="_blank" rel="noopener noreferrer" aria-label="FZI Research Center for Information Technology"
+       class="transition-transform duration-200 hover:scale-110">
+      <img src={fziLogo} alt="FZI" class="h-24 w-auto object-contain" />
+    </a>
+    <a href={site.origin.kit} target="_blank" rel="noopener noreferrer" aria-label="Karlsruhe Institute of Technology"
+       class="transition-transform duration-200 hover:scale-110">
+      <img src={kitLogo} alt="KIT" class="h-24 w-auto object-contain" />
+    </a>
+  </div>
+</div>
+
+<footer class="bg-navy text-white pt-16 pb-10">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="grid md:grid-cols-4 gap-10 mb-12">
+      <div class="md:col-span-2">
+        <a href={home} class="flex items-center gap-2 mb-3">
+          <img src={mark} alt="" width="28" height="28" class="h-7 w-7" aria-hidden="true" />
+          <span class="font-display font-extrabold text-[1.5rem] leading-none text-white">{site.name}</span>
+        </a>
+        <p class="text-slate-400 text-sm leading-relaxed mb-4 max-w-md">
+          {site.description}
+        </p>
+        <p class="text-slate-500 text-sm leading-relaxed max-w-md">
+          Originated at
+          <a href={site.origin.fzi} target="_blank" rel="noopener" class="text-kit font-semibold hover:underline">FZI</a>,
+          with ongoing work at
+          <a href={site.origin.mrt} target="_blank" rel="noopener" class="text-kit font-semibold hover:underline">KIT-MRT</a>
+          and a worldwide community.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="font-display font-bold text-xs uppercase tracking-widest text-slate-400 mb-4">
+          Ecosystem
+        </h4>
+        <ul class="space-y-2.5 text-sm text-slate-300">
+          {ecosystemCategories.map((c) => (
+            <li>
+              <a href={withBase(c.id)} class="hover:text-kit transition-colors">
+                {c.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-display font-bold text-xs uppercase tracking-widest text-slate-400 mb-4">
+          Resources
+        </h4>
+        <ul class="space-y-2.5 text-sm text-slate-300">
+          <li>
+            <a href={site.github} target="_blank" rel="noopener" class="hover:text-kit transition-colors">
+              GitHub ↗
+            </a>
+          </li>
+          <li>
+            <a href={site.docs} target="_blank" rel="noopener" class="hover:text-kit transition-colors">
+              Documentation ↗
+            </a>
+          </li>
+          <li>
+            <a href={site.pypi} target="_blank" rel="noopener" class="hover:text-kit transition-colors">
+              PyPI ↗
+            </a>
+          </li>
+          <li>
+            <a href={site.origin.mrt} target="_blank" rel="noopener" class="hover:text-kit transition-colors">
+              MRT @ KIT ↗
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+      <span>Lanelet2 is released under the BSD 3-Clause license.</span>
+      <span>kit-mrt.github.io/lanelet2-website</span>
+    </div>
+  </div>
+</footer>

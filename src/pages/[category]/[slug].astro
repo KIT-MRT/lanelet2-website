@@ -1,0 +1,72 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import { getCategory } from '../../data/categories';
+import { pagedEntries, type TeaserEntry } from '../../data/entries';
+import { site } from '../../data/site';
+import { withBase, assetUrl } from '../../lib/paths';
+
+export function getStaticPaths() {
+  return pagedEntries().map((entry) => ({
+    params: { category: entry.category, slug: entry.id },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: TeaserEntry;
+}
+
+const { entry } = Astro.props;
+const category = getCategory(entry.category);
+const imageSrc =
+  entry.media?.type === 'image' && entry.media.src ? assetUrl(entry.media.src) : undefined;
+const repo = entry.repo ?? (entry.external ? entry.href : undefined);
+---
+
+<Layout title={`${entry.title} – ${site.name}`} description={entry.teaser}>
+  <Nav />
+
+  <section class="bg-navy hero-dots pt-32 pb-16 px-6">
+    <div class="max-w-6xl mx-auto">
+      {category && (
+        <a href={withBase(category.id)} class="text-kit text-sm font-bold hover:underline">
+          ← {category.title}
+        </a>
+      )}
+      <h1 class="font-display font-extrabold text-4xl md:text-5xl text-white mt-6 mb-4">
+        {entry.title}
+      </h1>
+      <p class="text-slate-300 max-w-2xl leading-relaxed">{entry.teaser}</p>
+    </div>
+  </section>
+
+  <section class="py-16 bg-white">
+    <div class="max-w-3xl mx-auto px-6">
+      {imageSrc && (
+        <figure class="mb-10 rounded-2xl overflow-hidden border border-kit/15">
+          <img src={imageSrc} alt={entry.media?.alt ?? ''} class="w-full h-auto" />
+        </figure>
+      )}
+
+      {entry.detail?.map((paragraph) => (
+        <p class="text-gray-600 leading-relaxed mb-5">{paragraph}</p>
+      ))}
+
+      {repo && (
+        <a
+          href={repo}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 bg-kit hover:bg-kit-600 text-white font-bold px-6 py-3 rounded-xl mt-4 transition-colors"
+        >
+          <i class="ti ti-brand-github" aria-hidden="true"></i>
+          View on GitHub
+        </a>
+      )}
+    </div>
+  </section>
+
+  <Footer />
+</Layout>

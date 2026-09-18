@@ -1,0 +1,111 @@
+---
+import { site } from '../data/site';
+import { withBase, isCurrentPath } from '../lib/paths';
+
+const { pathname } = Astro.url;
+const home = withBase();
+const official = `${withBase()}#official`;
+const ecosystem = `${withBase()}#ecosystem`;
+
+const navLink = (active: boolean) =>
+  `px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+    active ? 'text-kit bg-kit/8' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100/70'
+  }`;
+
+const mobileLink = (active: boolean) =>
+  `block px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors ${
+    active ? 'text-kit bg-kit/8' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100/70'
+  }`;
+
+const homeActive = isCurrentPath(pathname, '/');
+const mark = withBase('images/lanelet2-mark.svg');
+---
+
+<header id="site-header" class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100">
+  <input type="checkbox" id="nav-toggle" class="sr-only peer/nav" aria-label="Toggle menu" />
+
+  <div class="max-w-6xl mx-auto px-6 py-3 md:grid md:grid-cols-3 md:items-center flex items-center justify-between">
+    <a href={home} class="flex items-center gap-2 flex-shrink-0">
+      <img src={mark} alt="" width="28" height="28" class="h-7 w-7" aria-hidden="true" />
+      <span class="font-display font-bold text-[1.35rem] leading-none text-navy">{site.name}</span>
+    </a>
+
+    <nav class="hidden md:flex items-center justify-center gap-0.5" aria-label="Main navigation">
+      <a href={home} class={navLink(homeActive)}>Home</a>
+      <a href={official} class={navLink(false)}>Official</a>
+      <a href={ecosystem} class={navLink(false)}>Ecosystem</a>
+    </nav>
+
+    <div class="hidden md:flex justify-end items-center gap-2">
+      <a href={site.docs} target="_blank" rel="noopener noreferrer"
+         class="text-xs font-bold text-gray-600 hover:text-navy px-3 py-1.5 rounded-full hover:bg-gray-100/70 transition-colors">
+        Docs
+      </a>
+      <a href={site.github} target="_blank" rel="noopener noreferrer"
+         class="flex items-center gap-1.5 bg-gray-900 text-white text-xs font-bold px-3 py-1.5 rounded-full hover:opacity-80 transition-opacity">
+        <i class="ti ti-brand-github text-sm" aria-hidden="true"></i>
+        GitHub
+      </a>
+    </div>
+
+    <label
+      for="nav-toggle"
+      class="md:hidden flex flex-col h-10 w-10 rounded-lg justify-center items-center gap-1.5 hover:bg-gray-100 transition-colors cursor-pointer"
+      aria-label="Toggle menu"
+    >
+      <span class="hamburger-line block h-0.5 w-5 bg-gray-700 rounded-full transition-all duration-200 origin-center"></span>
+      <span class="hamburger-line block h-0.5 w-5 bg-gray-700 rounded-full transition-all duration-200"></span>
+      <span class="hamburger-line block h-0.5 w-5 bg-gray-700 rounded-full transition-all duration-200 origin-center"></span>
+    </label>
+  </div>
+
+  <div class="md:hidden overflow-hidden max-h-0 peer-checked/nav:max-h-[320px] transition-[max-height] duration-300 ease-in-out">
+    <div class="bg-white border-t border-gray-100 px-4 pb-4 pt-2">
+      <nav class="flex flex-col gap-1" aria-label="Mobile navigation">
+        <a href={home} class={mobileLink(homeActive)}>Home</a>
+        <a href={official} class={mobileLink(false)}>Official</a>
+        <a href={ecosystem} class={mobileLink(false)}>Ecosystem</a>
+        <div class="mt-2 flex gap-2">
+          <a href={site.docs} target="_blank" rel="noopener noreferrer"
+             class="flex-1 flex items-center justify-center gap-1.5 border border-gray-200 text-gray-800 text-xs font-bold px-4 py-2 rounded-full hover:bg-gray-50 transition-colors">
+            Docs
+          </a>
+          <a href={site.github} target="_blank" rel="noopener noreferrer"
+             class="flex-1 flex items-center justify-center gap-1.5 bg-gray-900 text-white text-xs font-bold px-4 py-2 rounded-full hover:opacity-80 transition-opacity">
+            <i class="ti ti-brand-github text-sm" aria-hidden="true"></i>
+            GitHub
+          </a>
+        </div>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<script>
+  (function () {
+    const checkbox = document.getElementById('nav-toggle') as HTMLInputElement | null;
+    const lines = document.querySelectorAll('.hamburger-line');
+
+    checkbox?.addEventListener('change', () => {
+      if (checkbox.checked) {
+        (lines[0] as HTMLElement).style.transform = 'translateY(8px) rotate(45deg)';
+        (lines[1] as HTMLElement).style.opacity = '0';
+        (lines[2] as HTMLElement).style.transform = 'translateY(-8px) rotate(-45deg)';
+      } else {
+        (lines[0] as HTMLElement).style.transform = '';
+        (lines[1] as HTMLElement).style.opacity = '';
+        (lines[2] as HTMLElement).style.transform = '';
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 768 && checkbox?.checked) {
+        checkbox.checked = false;
+        lines.forEach((l) => {
+          (l as HTMLElement).style.transform = '';
+          (l as HTMLElement).style.opacity = '';
+        });
+      }
+    });
+  })();
+</script>

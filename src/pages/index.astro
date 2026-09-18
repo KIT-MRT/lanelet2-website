@@ -1,0 +1,152 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import CategorySection from '../components/CategorySection.astro';
+import { site } from '../data/site';
+import { categories } from '../data/categories';
+import { withBase } from '../lib/paths';
+
+const official = categories.find((c) => c.id === 'official')!;
+const ecosystem = categories.filter((c) => c.id !== 'official');
+const mark = withBase('images/lanelet2-mark.svg');
+const heroVideo = withBase('videos/autoware_kitscenes_crf30-720p.mp4');
+---
+
+<Layout title={`${site.name} – ${site.tagline}`}>
+  <Nav />
+
+  <section class="relative min-h-screen bg-navy hero-dots overflow-hidden">
+    <div class="absolute inset-0">
+      <video
+        id="hero-video"
+        autoplay
+        muted
+        loop
+        playsinline
+        class="absolute inset-0 w-full h-full object-cover opacity-30"
+        aria-hidden="true"
+      >
+        <source src={heroVideo} type="video/mp4" />
+      </video>
+      <div class="absolute inset-0 bg-gradient-to-b from-navy/60 via-navy/40 to-navy/85"></div>
+    </div>
+
+    <div class="relative z-10 min-h-screen flex flex-col items-center justify-center
+                text-center px-6 pt-16 pb-20">
+    <div class="fade-up d1 mb-5">
+      <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest
+                   text-kit border border-kit/30 rounded-full px-5 py-2 bg-kit/5">
+        C++ · Python · ROS
+        <span class="w-px h-3 bg-kit/40"></span>
+        Open source
+      </span>
+    </div>
+
+    <h1 class="fade-up d2 font-display font-extrabold text-white tracking-tight
+               flex items-center justify-center gap-3 md:gap-5 lg:gap-6"
+        style="text-shadow: 0 0 80px rgba(0,150,130,0.18);">
+      <img
+        src={mark}
+        alt=""
+        aria-hidden="true"
+        class="h-14 w-14 md:h-[5.4rem] md:w-[5.4rem] lg:h-[6.4rem] lg:w-[6.4rem] shrink-0"
+      />
+      <span class="text-7xl md:text-[108px] lg:text-[128px] leading-none">{site.name}</span>
+    </h1>
+
+    <p class="fade-up d3 font-display font-semibold text-kit text-2xl mt-4 mb-6 tracking-wide">
+      {site.tagline}
+    </p>
+
+    <p class="fade-up d4 text-slate-300 max-w-3xl leading-relaxed">
+      Lanelet2 is the HD-map library for autonomous driving: a consistent map model,
+      routing, traffic rules, and Python bindings — built to be extended.
+      Teams use it in all components of autonomous driving stacks, robotics, dataset pipelines, and research.
+      It enables real-world autonomous driving with open-source stacks such as
+      <a href={site.autoware} target="_blank" rel="noopener noreferrer"
+         class="text-kit font-semibold hover:underline">Autoware</a>,
+      and offline research by supervising HD map construction models and end-to-end models.
+      HD maps furthermore enable all kinds of simulation environments and provide strong priors
+      and an evaluation basis for novel view synthesis and generative closed-loop simulation.
+    </p>
+
+    <div class="fade-up d5 flex flex-wrap gap-4 mt-10 justify-center">
+      <a href={site.github} target="_blank" rel="noopener noreferrer"
+         class="bg-kit hover:bg-kit-600 text-white font-bold px-7 py-3.5 rounded-xl
+                transition-all hover:scale-[1.03] hover:shadow-xl hover:shadow-kit/30">
+        Source on GitHub →
+      </a>
+      <a href={site.docs} target="_blank" rel="noopener noreferrer"
+         class="bg-white/10 hover:bg-white/15 text-white font-bold px-7 py-3.5 rounded-xl
+                border border-white/15 transition-all hover:scale-[1.03]">
+        Read the docs
+      </a>
+      <a href={site.pypi} target="_blank" rel="noopener noreferrer"
+         class="bg-white/10 hover:bg-white/15 text-white font-bold px-7 py-3.5 rounded-xl
+                border border-white/15 transition-all hover:scale-[1.03]">
+        pip install lanelet2
+      </a>
+    </div>
+
+    <p class="fade-up d6 mt-14 text-slate-500 text-sm tracking-wide">
+      Originated at FZI Research Center for Information Technology<br />
+      with ongoing work at KIT-MRT and the Lanelet2 community
+    </p>
+
+    <div class="fade-up d6 mt-10 text-slate-600">
+      <a href="#official" class="inline-flex" aria-label="Scroll to official resources">
+        <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </a>
+    </div>
+    </div>
+  </section>
+
+  <CategorySection category={official} variant="tiles" />
+
+  <div id="ecosystem">
+    {ecosystem.map((category, i) => (
+      <CategorySection category={category} muted={i % 2 === 0} />
+    ))}
+  </div>
+
+  <section class="py-24 bg-navy hero-dots text-center px-6">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="font-display font-extrabold text-3xl md:text-4xl text-white mb-5">
+        Use it. Extend it. Publish with it.
+      </h2>
+      <p class="text-slate-300 leading-relaxed mb-10">
+        Lanelet2 is ready for robotics projects and autonomous driving research —
+        routing, perception datasets, simulation, and onboard maps.
+        If you ship an addon, a dataset, or a paper, we want it on this hub.
+      </p>
+      <div class="flex flex-wrap gap-4 justify-center">
+        <a href={site.github} target="_blank" rel="noopener noreferrer"
+           class="bg-kit hover:bg-kit-600 text-white font-bold px-7 py-3.5 rounded-xl
+                  transition-all hover:scale-[1.03] hover:shadow-xl hover:shadow-kit/30">
+          Get the source →
+        </a>
+        <a href="https://github.com/fzi-forschungszentrum-informatik/Lanelet2/issues"
+           target="_blank" rel="noopener noreferrer"
+           class="bg-white/10 hover:bg-white/15 text-white font-bold px-7 py-3.5 rounded-xl
+                  border border-white/15 transition-all hover:scale-[1.03]">
+          Suggest a listing
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>
+
+<script>
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const hv = document.getElementById('hero-video') as HTMLVideoElement | null;
+    if (hv) {
+      hv.pause();
+      hv.style.display = 'none';
+    }
+  }
+</script>

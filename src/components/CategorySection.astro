@@ -1,0 +1,56 @@
+---
+import type { Category } from '../data/categories';
+import { entriesFor } from '../data/entries';
+import { withBase } from '../lib/paths';
+import TeaserCard from './TeaserCard.astro';
+
+interface Props {
+  category: Category;
+  variant?: 'cards' | 'tiles';
+  showHeading?: boolean;
+  muted?: boolean;
+}
+
+const {
+  category,
+  variant = 'cards',
+  showHeading = true,
+  muted = false,
+} = Astro.props;
+const items = entriesFor(category.id);
+const compact = variant === 'tiles';
+const cols =
+  variant === 'tiles'
+    ? 'grid md:grid-cols-3 gap-5'
+    : items.length === 1
+      ? 'grid md:grid-cols-2 gap-6 max-w-xl'
+      : 'grid md:grid-cols-2 lg:grid-cols-3 gap-6';
+---
+
+<section id={category.id} class:list={['py-20', muted ? 'bg-gray-50' : 'bg-white']}>
+  <div class="max-w-6xl mx-auto px-6">
+    {showHeading && (
+      <div class="mb-10 max-w-3xl">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <h2 class="font-display font-extrabold text-3xl md:text-4xl text-navy flex items-center gap-3">
+            <i class={`ti ${category.icon} text-kit text-2xl`} aria-hidden="true"></i>
+            {category.title}
+          </h2>
+          <a
+            href={withBase(category.id)}
+            class="text-sm font-bold text-kit hover:underline whitespace-nowrap"
+          >
+            View all →
+          </a>
+        </div>
+        <p class="text-gray-500 mt-3 leading-relaxed">{category.blurb}</p>
+      </div>
+    )}
+
+    <div class={cols}>
+      {items.map((entry) => (
+        <TeaserCard entry={entry} compact={compact} />
+      ))}
+    </div>
+  </div>
+</section>
