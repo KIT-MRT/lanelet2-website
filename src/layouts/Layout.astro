@@ -29,6 +29,36 @@ const favicon = withBase('favicon.svg');
   </head>
   <body class="font-body bg-white text-gray-900 antialiased text-[17px] leading-[1.75]">
     <slot />
+    <script>
+      (function () {
+        const videos = document.querySelectorAll<HTMLVideoElement>('video[data-play-inview]');
+        if (!videos.length) return;
+
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          videos.forEach((v) => {
+            v.pause();
+            v.removeAttribute('autoplay');
+          });
+          return;
+        }
+
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              const video = entry.target as HTMLVideoElement;
+              if (entry.isIntersecting) {
+                video.play().catch(() => {});
+              } else {
+                video.pause();
+              }
+            }
+          },
+          { threshold: 0.2 },
+        );
+
+        videos.forEach((v) => io.observe(v));
+      })();
+    </script>
   </body>
 </html>
 

@@ -17,19 +17,20 @@ const heroVideo = withBase('videos/autoware_kitscenes_crf30-720p.mp4');
   <Nav />
 
   <section class="relative min-h-screen bg-navy hero-dots overflow-hidden">
-    <div class="absolute inset-0">
+    <div class="absolute inset-0 transform-gpu [backface-visibility:hidden]">
       <video
         id="hero-video"
-        autoplay
+        data-play-inview
         muted
         loop
         playsinline
-        class="absolute inset-0 w-full h-full object-cover opacity-30"
+        preload="metadata"
+        class="absolute inset-0 w-full h-full object-cover"
         aria-hidden="true"
       >
         <source src={heroVideo} type="video/mp4" />
       </video>
-      <div class="absolute inset-0 bg-gradient-to-b from-navy/60 via-navy/40 to-navy/85"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-navy/80 via-navy/75 to-navy/90"></div>
     </div>
 
     <div class="relative z-10 min-h-screen flex flex-col items-center justify-center
@@ -140,13 +141,3 @@ const heroVideo = withBase('videos/autoware_kitscenes_crf30-720p.mp4');
 
   <Footer />
 </Layout>
-
-<script>
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const hv = document.getElementById('hero-video') as HTMLVideoElement | null;
-    if (hv) {
-      hv.pause();
-      hv.style.display = 'none';
-    }
-  }
-</script>
