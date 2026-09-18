@@ -5,7 +5,7 @@ import Footer from '../components/Footer.astro';
 import CategorySection from '../components/CategorySection.astro';
 import { site } from '../data/site';
 import { categories } from '../data/categories';
-import { withBase } from '../lib/paths';
+import { withBase } from '../utils/paths';
 
 const official = categories.find((c) => c.id === 'official')!;
 const ecosystem = categories.filter((c) => c.id !== 'official');

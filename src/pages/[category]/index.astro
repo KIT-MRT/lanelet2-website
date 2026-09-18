@@ -6,7 +6,7 @@ import TeaserCard from '../../components/TeaserCard.astro';
 import { categories, getCategory } from '../../data/categories';
 import { entriesFor } from '../../data/entries';
 import { site } from '../../data/site';
-import { withBase } from '../../lib/paths';
+import { withBase } from '../../utils/paths';
 export function getStaticPaths() {
   return categories.map((category) => ({
     params: { category: category.id },

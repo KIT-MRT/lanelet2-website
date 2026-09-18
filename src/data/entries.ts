@@ -1,5 +1,5 @@
 import type { CategoryId } from './categories';
-import { withBase } from '../lib/paths';
+import { withBase } from '../utils/paths';
 
 export interface TeaserMedia {
   type: 'image' | 'video' | 'none';

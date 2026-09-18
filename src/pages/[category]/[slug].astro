@@ -5,7 +5,7 @@ import Footer from '../../components/Footer.astro';
 import { getCategory } from '../../data/categories';
 import { pagedEntries, type TeaserEntry } from '../../data/entries';
 import { site } from '../../data/site';
-import { withBase, assetUrl } from '../../lib/paths';
+import { withBase, assetUrl } from '../../utils/paths';
 
 export function getStaticPaths() {
   return pagedEntries().map((entry) => ({
